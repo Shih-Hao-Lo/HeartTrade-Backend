@@ -17,8 +17,21 @@ const users = mongoCollections.users;
 
 */
 async function get(id) {
+    if(id === undefined){
+        throw 'input is empty (in user.get)';
+    }
+    if(id.constructor != ObjectID){
+        if(ObjectID.isValid(id)){
+            id = new ObjectID(id);
+        }
+        else{
+            throw 'Id is invalid!(in user.get)'
+        }
+    }
+
     const usersCollections = await users();
     const target = await usersCollections.findOne({ _id: id });
+    if(target == null) throw 'user not found'
 
     return target;
 }
@@ -40,6 +53,7 @@ async function get(id) {
 async function getbyemail(email) {
     const usersCollections = await users();
     const target = await usersCollections.findOne({ email: email });
+    if(target == null) throw 'user email not found'
 
     return target;
 }
@@ -62,6 +76,10 @@ async function getbyemail(email) {
         }
 */
 async function adduser(username, password, Lat, Long_, email) {
+    if(username == undefined || password == undefined || Lat == undefined || Long_ == undefined || email == undefined) {
+        throw "Input missing! (in user.addusers)"
+    }
+
     const usersCollections = await users();
 
     let newuser = {
@@ -73,6 +91,7 @@ async function adduser(username, password, Lat, Long_, email) {
     }
 
     const inserted = await usersCollections.insertOne(newuser);
+    if(inserted.insertedCount === 0) throw 'Insert fail! (in user.addusers)';
 
     return await get(inserted.insertedId);
 }
@@ -118,6 +137,7 @@ async function updateuser(_id , username, password, Lat, Long_) {
     }
 
     const updated = await usersCollections.updateOne({ _id: _id } , updateuser);
+    if(updated.modifiedCount === 0) throw 'Update fail! (in user.addusers)';
 
     return await get(_id);
 }
