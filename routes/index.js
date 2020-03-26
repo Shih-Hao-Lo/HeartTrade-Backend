@@ -1,3 +1,6 @@
+const user_ = require('../data/user');
+const order_ = require('../data/order');
+
 const constructorMethod = app => {
     /*
 
@@ -5,58 +8,51 @@ const constructorMethod = app => {
 
     */
     
-    app.get('/get_user', function(req, res) {
+    app.get('/get_user_by_id', async function(req, res) {
         let id = req.body.userId;
-        let getUser = get(id);
-        if (getUser) {
-            res.send(getUser);
-        }
-        else {
-            res.send(500, "Get user fail");
+        try {
+            let getUser = await user_.get(id);
+            res.status(200).json(getUser);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
-    app.get('/get_user_by_email', function(req, res) {
-        let id = req.body.userId;
-        let getByEmail = getbyemail(email)
-        if (getByEmail) {
-            res.send(getByEmail);
-        }
-        else {
-            res.send(500, "Get user by email fail");
+    app.get('/get_user_by_email', async function(req, res) {
+        let email = req.body.email;
+        try {
+            let getByEmail = await user_.getbyemail(email);
+            res.status(200).json(getByEmail);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
-    app.post('add_user', function(req, res) {
+    app.post('/add_user', async function(req, res) {
         let username = req.body.username;
         let password = req.body.password;
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
         let email = req.body.email;
-
-        let addUser = adduser(username, password, Lat, Long_, email)
-        if (addUser) {
-            res.send(addUser);
-        }
-        else {
-            res.send(500, "Post new user fail");
+        try {
+            let addUser = await user_.adduser(username, password, Lat, Long_, email);
+            res.status(200).json(addUser);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
-    app.put('update_user', function(req, res) {
+    app.put('/update_user', async function(req, res) {
         let _id = req.body.userId;
         let username = req.body.username;
         let password = req.body.password;
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
-        let email = req.body.email;
-
-        let updateUser = updateuser(_id , username, password, Lat, Long_, email);
-        if (updateUser) {
-            res.send(updateUser);
-        }
-        else {
-            res.send(500, "Update user fail");
+        try {
+            let updateUser = await user_.updateuser(_id , username, password, Lat, Long_);
+            res.status(200).json(updateUser);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -67,42 +63,39 @@ const constructorMethod = app => {
 
     */
 
-    app.get('/get_orders_by_user', function(req, res) {
+    app.get('/get_orders_by_user', async function(req, res) {
         let uid = req.body.userUid;
-        let getOrdersByUser = getbyuser(uid);
-        if (getOrdersByUser) {
-            res.send(getOrderByUser);
-        }
-        else {
-            res.send(500, "Get orders by user fail");
+        try {
+            let getOrdersByUser = await order_.getbyuser(uid);
+            res.status(200).json(getOrderByUser);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
-    app.post('/add_order', function(req, res) {
+    app.post('/add_order', async function(req, res) {
         let prod = req.body.prod;
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
-        let addOrder = addorders(user_id , prod , amt , wish , wish_amt);
-        if (addOrder) {
-            res.send(addOrder);
-        }
-        else {
-            res.send(500, "Add Order Fail");
+        try {
+            let addOrder = await order_.addorders(user_id , prod , amt , wish , wish_amt);
+            res.status(200).json(addOrder);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
-    app.put('/update_order', function(req, res) {
+    app.put('/update_order', async function(req, res) {
         let prod = req.body.prod;
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
-        let updatedOrder = updateorders(post_id , prod , amt , wish , wish_amt)
-        if (updatedOrder) {
-            res.send(updatedOrder);
-        }
-        else {
-            res.send(500, "Update Order Fail");
+        try {
+            let updatedOrder = await order_.updateorders(post_id , prod , amt , wish , wish_amt);
+            res.status(200).json(updatedOrder);
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
