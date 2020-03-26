@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID
 
 /*
     in: 
-        id: ID!
+        id: ID! or String!
     ret:
         user = {
                 _id: ID
@@ -99,7 +99,7 @@ async function adduser(username, password, Lat, Long_, email) {
 
 /*
     in:
-        _id: ID!
+        _id: ID! or String!
         username: String
         password: String
         Lat: Double

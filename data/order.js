@@ -9,7 +9,14 @@ const ObjectID = require('mongodb').ObjectID
     ret:
         order = {
                 _id: ID!
-                user_id: String!
+                user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
                 prod: String!
                 amt: Integer!
                 wish: String!
@@ -33,6 +40,9 @@ async function get(id) {
     const ordersCollections = await orders();
     const target = await ordersCollections.findOne({ _id: id });
     if(target == null) throw 'order not found'
+
+    target['user'] = await user_.get(target.user_id);
+    delete target.user_id;
 
     return target;
 }
@@ -83,7 +93,14 @@ async function getbyuser(uid) {
     ret:
         order = {
             _id: ID!
-            user_id: String!
+            user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
             prod: String!
             amt: Integer!
             wish: String!
@@ -114,15 +131,22 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
 
 /*
     in:
-        post_id: ID!
-        prod: String!
-        amt: Integer!
-        wish: String!
-        wish_amt: Integer!
+        post_id: ID! or String!
+        prod: String
+        amt: Integer
+        wish: String
+        wish_amt: Integer
     ret:
         order = {
             _id: ID!
-            user_id: String!
+            user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
             prod: String!
             amt: Integer!
             wish: String!
