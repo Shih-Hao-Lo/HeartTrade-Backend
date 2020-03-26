@@ -25,6 +25,20 @@ const constructorMethod = app => {
 
     */
 
+    app.post('/add_order', function(req, res) {
+        let prod = req.body.prod;
+        let amt = req.body.amt;
+        let wish = req.body.wish;
+        let wish_amt = req.body.wish_amt;
+        let addOrder = addorders(user_id , prod , amt , wish , wish_amt);
+        if (addOrder) {
+            res.send(addOrder);
+        }
+        else {
+            res.send(500, "Add Order Fail");
+        }
+    });
+
     app.post('/update_order', function(req, res) {
         let prod = req.body.prod;
         let amt = req.body.amt;
