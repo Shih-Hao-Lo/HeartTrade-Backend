@@ -1,35 +1,29 @@
 const constructorMethod = app => {
-    app.get("/" , (req , res) => {
-        res.sendStatus(200);
+    app.post('/register', function(req, res) {        
+        let userName = req.body.username;
+        let password = req.body.password;
+        let lat = req.body.Lat;
+        let long = req.body.Long_;
+        let email = req.body.email;
+
+        // TODO: Check input format
+        // ...
+
+        let userObject = adduser(userName,  password,  lat,  long, email);
+        if (userObject) {
+            res.send(userObject);
+        }
+        else {
+            res.send('error-page', {});
+        }
     });
 
-    app.get('/register', function(req, res) {
-        res.send('register', { });
-    });
-
-    app.post('/register', function(req, res) {
-        Account.register(new Account({username: req.body.username}), req.body.password, function(err, account) {
-            if (err) {
-                return res.send('register', {account: account});
-            }
-
-            passport.authenticate('local')(req, res, function() {
-                res.redirect(301, '/');
-            });
-        })
-    });
-
-    app.get('/login', function(req, res) {
-        res.send('login', {user: req.user});
-    });
-
-    app.post('/login', passport.authenticate('local'), function(req, res) {
-        res.redirect('/');
-    });
-
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.direct('/');
+    app.post('/update_order', function(req, res) {
+        let prod = req.body.prod;
+        let amt = req.body.amt;
+        let wish = req.body.wish;
+        let wish_amt = req.body.wish_amt;
+        updateorders(post_id , prod , amt , wish , wish_amt)
     });
 
 }
