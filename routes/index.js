@@ -48,9 +48,8 @@ const constructorMethod = app => {
         let password = req.body.password;
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
-        let email = req.body.email;
         try {
-            let updateUser = await user_.updateuser(_id , username, password, Lat, Long_, email);
+            let updateUser = await user_.updateuser(_id , username, password, Lat, Long_);
             res.status(200).json(updateUser);
         } catch(e) {
             res.status(500).json(e);
