@@ -10,23 +10,21 @@ const constructorMethod = app => {
     
     app.get('/get_user_by_id', async function(req, res) {
         let id = req.body.userId;
-        let getUser = await user_.get(id);
-        if (getUser) {
+        try {
+            let getUser = await user_.get(id);
             res.status(200).json(getUser);
-        }
-        else {
-            res.status(500).json("Get user fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
     app.get('/get_user_by_email', async function(req, res) {
         let id = req.body.userId;
-        let getByEmail = await user_.getbyemail(email)
-        if (getByEmail) {
+        try {
+            let getByEmail = await user_.getbyemail(email);
             res.status(200).json(getByEmail);
-        }
-        else {
-            res.status(500).json("Get user by email fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -36,14 +34,11 @@ const constructorMethod = app => {
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
         let email = req.body.email;
-        console.log(req.body);
-        //console.log(password);
-        let addUser = await user_.adduser(username, password, Lat, Long_, email)
-        if (addUser) {
+        try {
+            let addUser = await user_.adduser(username, password, Lat, Long_, email);
             res.status(200).json(addUser);
-        }
-        else {
-            res.status(500).json("Post new user fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -54,13 +49,11 @@ const constructorMethod = app => {
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
         let email = req.body.email;
-
-        let updateUser = await user_.updateuser(_id , username, password, Lat, Long_, email);
-        if (updateUser) {
+        try {
+            let updateUser = await user_.updateuser(_id , username, password, Lat, Long_, email);
             res.status(200).json(updateUser);
-        }
-        else {
-            res.status(500).json("Update user fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -73,12 +66,11 @@ const constructorMethod = app => {
 
     app.get('/get_orders_by_user', async function(req, res) {
         let uid = req.body.userUid;
-        let getOrdersByUser = await order_.getbyuser(uid);
-        if (getOrdersByUser) {
+        try {
+            let getOrdersByUser = await order_.getbyuser(uid);
             res.status(200).json(getOrderByUser);
-        }
-        else {
-            res.status(500).json("Get orders by user fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -87,12 +79,11 @@ const constructorMethod = app => {
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
-        let addOrder = await order_.addorders(user_id , prod , amt , wish , wish_amt);
-        if (addOrder) {
+        try {
+            let addOrder = await order_.addorders(user_id , prod , amt , wish , wish_amt);
             res.status(200).json(addOrder);
-        }
-        else {
-            res.status(500).json("Add Order Fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
@@ -101,12 +92,11 @@ const constructorMethod = app => {
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
-        let updatedOrder = await order_.updateorders(post_id , prod , amt , wish , wish_amt)
-        if (updatedOrder) {
+        try {
+            let updatedOrder = await order_.updateorders(post_id , prod , amt , wish , wish_amt);
             res.status(200).json(updatedOrder);
-        }
-        else {
-            res.status(500).json("Update Order Fail");
+        } catch(e) {
+            res.status(500).json(e);
         }
     });
 
