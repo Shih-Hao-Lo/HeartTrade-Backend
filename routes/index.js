@@ -27,7 +27,7 @@ const constructorMethod = app => {
         }
     });
 
-    app.post('add_user', function(req, res) {
+    app.post('/add_user', function(req, res) {
         let username = req.body.username;
         let password = req.body.password;
         let Lat = req.body.Lat;
@@ -43,7 +43,7 @@ const constructorMethod = app => {
         }
     });
 
-    app.put('update_user', function(req, res) {
+    app.put('/update_user', function(req, res) {
         let _id = req.body.userId;
         let username = req.body.username;
         let password = req.body.password;
