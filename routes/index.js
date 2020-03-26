@@ -64,9 +64,9 @@ const constructorMethod = app => {
     */
 
     app.get('/get_orders_by_user', async function(req, res) {
-        let uid = req.body.userUid;
+        let userId = req.body.userId;
         try {
-            let getOrdersByUser = await order_.getbyuser(uid);
+            let getOrdersByUser = await order_.getbyuser(userId);
             res.status(200).json(getOrderByUser);
         } catch(e) {
             res.status(500).json(e);
@@ -74,12 +74,13 @@ const constructorMethod = app => {
     });
 
     app.post('/add_order', async function(req, res) {
+        let userId = req.body.userId;
         let prod = req.body.prod;
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
         try {
-            let addOrder = await order_.addorders(user_id , prod , amt , wish , wish_amt);
+            let addOrder = await order_.addorders(userId , prod , amt , wish , wish_amt);
             res.status(200).json(addOrder);
         } catch(e) {
             res.status(500).json(e);
