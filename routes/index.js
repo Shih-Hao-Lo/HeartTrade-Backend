@@ -9,9 +9,9 @@ const constructorMethod = app => {
     */
     
     app.get('/get_user_by_id', async function(req, res) {
-        let id = req.body.userId;
+        let userId = req.body.userId;
         try {
-            let getUser = await user_.get(id);
+            let getUser = await user_.get(userId);
             res.status(200).json(getUser);
         } catch(e) {
             res.status(500).json(e);
@@ -43,13 +43,13 @@ const constructorMethod = app => {
     });
 
     app.put('/update_user', async function(req, res) {
-        let _id = req.body.userId;
+        let userId = req.body.userId;
         let username = req.body.username;
         let password = req.body.password;
         let Lat = req.body.Lat;
         let Long_ = req.body.Long_;
         try {
-            let updateUser = await user_.updateuser(_id , username, password, Lat, Long_);
+            let updateUser = await user_.updateuser(userId , username, password, Lat, Long_);
             res.status(200).json(updateUser);
         } catch(e) {
             res.status(500).json(e);
@@ -62,12 +62,22 @@ const constructorMethod = app => {
     Order Routers
 
     */
+   
+    app.get('/get_order_by_id', async function(req, res) {
+        let orderId = req.body.orderId;
+        try {
+            let getOrdersById = await order_.get(orderId);
+            res.status(200).json(getOrdersById);
+        } catch(e) {
+            res.status(500).json(e);
+        }
+    });
 
     app.get('/get_orders_by_user', async function(req, res) {
         let userId = req.body.userId;
         try {
             let getOrdersByUser = await order_.getbyuser(userId);
-            res.status(200).json(getOrderByUser);
+            res.status(200).json(getOrdersByUser);
         } catch(e) {
             res.status(500).json(e);
         }
@@ -88,12 +98,13 @@ const constructorMethod = app => {
     });
 
     app.put('/update_order', async function(req, res) {
+        let postId = req.body.postId;
         let prod = req.body.prod;
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
         try {
-            let updatedOrder = await order_.updateorders(post_id , prod , amt , wish , wish_amt);
+            let updatedOrder = await order_.updateorders(postId , prod , amt , wish , wish_amt);
             res.status(200).json(updatedOrder);
         } catch(e) {
             res.status(500).json(e);
