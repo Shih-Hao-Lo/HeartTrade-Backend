@@ -1,20 +1,62 @@
 const constructorMethod = app => {
-    app.post('/register', function(req, res) {        
-        let userName = req.body.username;
-        let password = req.body.password;
-        let lat = req.body.Lat;
-        let long = req.body.Long_;
-        let email = req.body.email;
+    /*
 
-        // TODO: Check input format
-        // ...
+    User
 
-        let userObject = adduser(userName,  password,  lat,  long, email);
-        if (userObject) {
-            res.send(userObject);
+    */
+    
+    app.get('/get_user', function(req, res) {
+        let id = req.body.userId;
+        let getUser = get(id);
+        if (getUser) {
+            res.send(getUser);
         }
         else {
-            res.send('error-page', {});
+            res.send(500, "Get user fail");
+        }
+    });
+
+    app.get('/get_user_by_email', function(req, res) {
+        let id = req.body.userId;
+        let getByEmail = getbyemail(email)
+        if (getByEmail) {
+            res.send(getByEmail);
+        }
+        else {
+            res.send(500, "Get user by email fail");
+        }
+    });
+
+    app.post('add_user', function(req, res) {
+        let username = req.body.username;
+        let password = req.body.password;
+        let Lat = req.body.Lat;
+        let Long_ = req.body.Long_;
+        let email = req.body.email;
+
+        let addUser = adduser(username, password, Lat, Long_, email)
+        if (addUser) {
+            res.send(addUser);
+        }
+        else {
+            res.send(500, "Post new user fail");
+        }
+    });
+
+    app.put('update_user', function(req, res) {
+        let _id = req.body.userId;
+        let username = req.body.username;
+        let password = req.body.password;
+        let Lat = req.body.Lat;
+        let Long_ = req.body.Long_;
+        let email = req.body.email;
+
+        let updateUser = updateuser(_id , username, password, Lat, Long_, email);
+        if (updateUser) {
+            res.send(updateUser);
+        }
+        else {
+            res.send(500, "Update user fail");
         }
     });
 
@@ -24,6 +66,17 @@ const constructorMethod = app => {
     Order
 
     */
+
+    app.get('/get_orders_by_user', function(req, res) {
+        let uid = req.body.userUid;
+        let getOrdersByUser = getbyuser(uid);
+        if (getOrdersByUser) {
+            res.send(getOrderByUser);
+        }
+        else {
+            res.send(500, "Get orders by user fail");
+        }
+    });
 
     app.post('/add_order', function(req, res) {
         let prod = req.body.prod;
@@ -39,7 +92,7 @@ const constructorMethod = app => {
         }
     });
 
-    app.post('/update_order', function(req, res) {
+    app.put('/update_order', function(req, res) {
         let prod = req.body.prod;
         let amt = req.body.amt;
         let wish = req.body.wish;
