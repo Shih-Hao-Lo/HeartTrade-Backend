@@ -46,6 +46,14 @@ async function main(){
         console.log("error:");
         console.log(e);
     }
+
+    try {
+        var err3 = await orderf.addorders(undefined , undefined , undefined , undefined , undefined);
+        console.log("u should not see this");
+    } catch(e) {
+        console.log("error:");
+        console.log(e);
+    }
 }
 
 main();

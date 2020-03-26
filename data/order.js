@@ -1,4 +1,5 @@
 const mongoCollections = require("./mongoCollections");
+const user_ = require('./user');
 const orders = mongoCollections.orders;
 const ObjectID = require('mongodb').ObjectID
 
@@ -43,7 +44,12 @@ async function get(id) {
         order[] = [{
                 _id: ID!
                 user: {
-
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
                 },
                 prod: String!
                 amt: Integer!
@@ -58,6 +64,10 @@ async function getbyuser(uid) {
     }
     const ordersCollections = await orders();
     const targets = await ordersCollections.find({ user_id: uid }).toArray();
+    for(target in targets) {
+        target['user'] = await user_.get(target['user_id']);
+        delete target['user_id'];
+    }
 
     return targets;
 }
