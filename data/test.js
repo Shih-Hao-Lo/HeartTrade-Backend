@@ -8,7 +8,7 @@ async function main(){
     console.log(user1);
 
     console.log("changing password for user1..");
-    var user1_mod = await userf.updateuser(user1._id , undefined , "hoho222" , undefined , undefined);
+    var user1_mod = await userf.updateuser("5e7d0cfb1695ef3f2c26bb50" , undefined , "hoho12345" , undefined , undefined);
     console.log("updated user:");
     console.log(user1_mod);
 

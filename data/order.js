@@ -65,8 +65,7 @@ async function getbyuser(uid) {
     const ordersCollections = await orders();
     const targets = await ordersCollections.find({ user_id: uid }).toArray();
     for(target in targets) {
-        target['user'] = await user_.get(target['user_id']);
-        delete target['user_id'];
+        console.log(target.user_id);
     }
 
     return targets;
@@ -129,6 +128,18 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
         }
 */
 async function updateorders(post_id , prod , amt , wish , wish_amt){
+    if(post_id === undefined){
+        throw 'input is empty (in user.get)';
+    }
+    if(_post_idid.constructor != ObjectID){
+        if(ObjectID.isValid(post_id)){
+            post_id = new ObjectID(post_id);
+        }
+        else{
+            throw 'Id is invalid!(in order.updateorder)'
+        }
+    }
+
     let target = await get(post_id);
     const ordersCollections = await orders();
     if(prod == undefined) prod = target.prod;
