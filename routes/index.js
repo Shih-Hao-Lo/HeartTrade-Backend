@@ -19,7 +19,7 @@ const constructorMethod = app => {
     });
 
     app.get('/get_user_by_email', async function(req, res) {
-        let id = req.body.userId;
+        let email = req.body.email;
         try {
             let getByEmail = await user_.getbyemail(email);
             res.status(200).json(getByEmail);
