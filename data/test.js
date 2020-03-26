@@ -29,6 +29,23 @@ async function main(){
     console.log("list all order for user1:")
     var orders = await orderf.getbyuser(user1._id.toString());
     console.log(orders);
+
+    console.log("error checking...");
+    try {
+        var err1 = await userf.get(undefined);
+        console.log("u should not see this");
+    } catch(e) {
+        console.log("error:");
+        console.log(e);
+    }
+
+    try {
+        var err2 = await userf.get("asd");
+        console.log("u should not see this");
+    } catch(e) {
+        console.log("error:");
+        console.log(e);
+    }
 }
 
 main();
