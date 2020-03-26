@@ -62,12 +62,14 @@ async function getbyuser(uid) {
     if(uid == undefined) {
         throw "user id is empty! (in order.getbyuser)"
     }
-    const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ user_id: uid }).toArray();
-    for(target in targets) {
-        console.log(target.user_id);
-    }
 
+    const ordersCollections = await orders();
+    const targets = await ordersCollections.find({ user_id: uid.toString() }).toArray();
+    for(x in targets) {
+        targets[x]['user'] = await user_.get(targets[x].user_id);
+        delete targets[x].user_id;
+        // console.log(target);
+    }
     return targets;
 }
 
@@ -131,7 +133,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt){
     if(post_id === undefined){
         throw 'input is empty (in user.get)';
     }
-    if(_post_idid.constructor != ObjectID){
+    if(post_id.constructor != ObjectID){
         if(ObjectID.isValid(post_id)){
             post_id = new ObjectID(post_id);
         }
