@@ -61,7 +61,7 @@ async function getbyemail(email) {
             email: String!
         }
 */
-function adduser(username, password, Lat, Long_, email) {
+async function adduser(username, password, Lat, Long_, email) {
     const usersCollections = await users();
 
     let newuser = {
@@ -96,7 +96,7 @@ function adduser(username, password, Lat, Long_, email) {
             email: String!
         }
 */
-function updateuser(_id , username, password, Lat, Long_, email) {
+async function updateuser(_id , username, password, Lat, Long_) {
     let target = await get(_id);
     const usersCollections = await users();
 
