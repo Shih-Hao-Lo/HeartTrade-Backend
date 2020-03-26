@@ -144,6 +144,7 @@ async function updateuser(_id , username, password, Lat, Long_) {
 
 module.exports = {
     get,
+    getbyemail,
     adduser,
     updateuser
 };
