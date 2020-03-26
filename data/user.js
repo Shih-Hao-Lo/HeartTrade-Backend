@@ -104,7 +104,6 @@ async function adduser(username, password, Lat, Long_, email) {
         password: String
         Lat: Double
         Long_: Double
-        email: String
     ret:
         user = {
             _id: ID!
@@ -116,7 +115,22 @@ async function adduser(username, password, Lat, Long_, email) {
         }
 */
 async function updateuser(_id , username, password, Lat, Long_) {
+    if(_id === undefined){
+        throw 'input is empty (in user.get)';
+    }
+    if(_id.constructor != ObjectID){
+        if(ObjectID.isValid(_id)){
+            _id = new ObjectID(_id);
+        }
+        else{
+            throw 'Id is invalid!(in user.updateuser)'
+        }
+    }
+    
     let target = await get(_id);
+    console.log("in updateuser")
+    console.log(target);
+
     const usersCollections = await users();
 
     if(username == undefined) username = target.username;
