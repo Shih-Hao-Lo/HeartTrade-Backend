@@ -38,7 +38,7 @@ async function get(id) {
 */
 async function getbyuser(uid) {
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ user_id: uid });
+    const targets = await ordersCollections.find({ user_id: uid }).toArray();
 
     return targets;
 }
@@ -94,7 +94,7 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
             wish_amt: Integer!
         }
 */
-function updateorders(post_id , prod , amt , wish , wish_amt){
+async function updateorders(post_id , prod , amt , wish , wish_amt){
     let target = await get(post_id);
     const ordersCollections = await orders();
     if(prod == undefined) prod = target.prod;
