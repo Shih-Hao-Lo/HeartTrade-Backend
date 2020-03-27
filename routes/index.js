@@ -69,6 +69,19 @@ const constructorMethod = app => {
         }
     });
 
+    app.get('/users_near_me', async function (req, res) {
+        let km = req.body.radius;
+        let lat = req.body.lat;
+        let long = req.body.long;
+        try {
+            let usersNearMe = await map_.UsersNearMeByKM(km, lat, long); //km, myLat, myLong
+            console.log(usersNearMe);
+            res.status(200).json(usersNearMe);
+        } catch (e) {
+            res.status(500).json(e);
+        }
+    });
+
 
     /*
 
