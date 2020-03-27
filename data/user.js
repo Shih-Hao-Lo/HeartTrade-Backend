@@ -156,9 +156,50 @@ async function updateuser(_id , username, password, Lat, Long_) {
     return await get(_id);
 }
 
+/*
+    in:
+        km: Double
+        myLat: Double
+        myLong: Double
+    ret:
+        All match users = {
+            ...
+            ...
+            ...
+        }
+*/
+async function UsersNearMeByKM(km, myLat, myLong) {
+    if (isNaN(km) || isNaN(myLat) || isNaN(myLong)) throw 'Input data type must be a integer';
+    if (km > 100) throw 'Input number is too large (must be in range 1-100)';
+
+    const usersCollections = await users();
+    
+    usersCollections.createIndex({ "location": "2dsphere" });
+
+    let aggr_users_near_me = await usersCollections.aggregate([
+        {
+            $geoNear: {
+                near: {
+                    type: "Point",
+                    coordinates: [myLong, myLat]
+                },
+                distanceField: "dist.distant",
+                maxDistance: km * 1000,
+                spherical: true,
+                distanceMultiplier: 0.001
+            }
+        }
+    ]).toArray();
+
+    if (aggr_users_near_me) return aggr_users_near_me;
+    else throw 'Users data aggregation fail';
+}
+
+
 module.exports = {
     get,
     getbyemail,
     adduser,
-    updateuser
+    updateuser,
+    UsersNearMeByKM
 };
