@@ -20,5 +20,6 @@ module.exports = {
   users: getCollectionFn("users"),
   orders:　getCollectionFn("orders"),
   map: getCollectionFn("map"),
+  map2: getCollectionFn("map2"),
   case: getCollectionFn("case")
 };

@@ -157,11 +157,11 @@ const constructorMethod = app => {
 
 
     app.get('/virus_near_me', async function (req, res) {
-        let meter = req.body.distant;
+        let km = req.body.radius;
         let lat = req.body.lat;
         let long = req.body.long;
         try {
-            let virusNearMe = await map_.VirusNearMeByMeter(meter, lat, long); //meter, myLat, myLong
+            let virusNearMe = await map_.VirusNearMeByKM(km, lat, long); //km, myLat, myLong
             console.log(virusNearMe);
             res.status(200).json(virusNearMe);
         } catch (e) {

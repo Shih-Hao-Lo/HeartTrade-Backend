@@ -1,7 +1,35 @@
 const mongoCollections = require("./mongoCollections");
 const map = mongoCollections.map;
+const map2 = mongoCollections.map2;
 const vcase = mongoCollections.case;
 
+async function CountryStateRank(country) {
+    if (isNaN(meter) || isNaN(myLat) || isNaN(myLong)) throw 'Input data type must be a integer';
+    if (meter > 1000000) throw 'Input number is too large (must be in range 1-1000000)';
+
+    const caseCollections = await vcase();
+    
+    caseCollections.createIndex({ "location": "2dsphere" });
+
+    let aggr_virus_near_me = await caseCollections.aggregate([
+        {
+            $geoNear: {
+                near: {
+                    type: "Point",
+                    coordinates: [myLong, myLat]
+                },
+                distanceField: "dist.calculated",
+                maxDistance: meter,
+                spherical: true
+            }
+        }
+    ]).toArray();
+
+    if (aggr_virus_near_me) return aggr_virus_near_me;
+    else throw 'Virus data aggregation fail';
+}
+
+/*
 async function VirusNearMeByMeter(meter, myLat, myLong) {
     if (isNaN(meter) || isNaN(myLat) || isNaN(myLong)) throw 'Input data type must be a integer';
     if (meter > 1000000) throw 'Input number is too large (must be in range 1-1000000)';
@@ -20,6 +48,34 @@ async function VirusNearMeByMeter(meter, myLat, myLong) {
                 distanceField: "dist.calculated",
                 maxDistance: meter,
                 spherical: true
+            }
+        }
+    ]).toArray();
+
+    if (aggr_virus_near_me) return aggr_virus_near_me;
+    else throw 'Virus data aggregation fail';
+}
+*/
+
+async function VirusNearMeByKM(km, myLat, myLong) {
+    if (isNaN(km) || isNaN(myLat) || isNaN(myLong)) throw 'Input data type must be a integer';
+    if (km > 10000) throw 'Input number is too large (must be in range 1-10000)';
+
+    const map2Collections = await map2();
+    
+    map2Collections.createIndex({ "location": "2dsphere" });
+
+    let aggr_virus_near_me = await map2Collections.aggregate([
+        {
+            $geoNear: {
+                near: {
+                    type: "Point",
+                    coordinates: [myLong, myLat]
+                },
+                distanceField: "dist.calculated",
+                maxDistance: km * 1000,
+                spherical: true,
+                distanceMultiplier: 0.001
             }
         }
     ]).toArray();
@@ -62,5 +118,5 @@ async function TopNState(n) {
 
 module.exports = {
     TopNState,
-    VirusNearMeByMeter
+    VirusNearMeByKM
 };
