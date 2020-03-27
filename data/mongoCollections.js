@@ -18,5 +18,7 @@ const getCollectionFn = collection => {
 /* Now, you can list your collections here: */
 module.exports = {
   users: getCollectionFn("users"),
-  orders:　getCollectionFn("orders")
+  orders:　getCollectionFn("orders"),
+  map: getCollectionFn("map"),
+  case: getCollectionFn("case")
 };
