@@ -55,7 +55,7 @@ async function main(){
     console.log(o1_mod);
     console.log(o2_mod);
     
-    var user1 = await userf.get("5e7eaa2280d72a6060225c55");
+    var user1 = await userf.get(user1._id);
     console.log("list all order for user1:")
     var orders = await orderf.getbyuser(user1._id);
     console.log(orders);
