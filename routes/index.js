@@ -22,7 +22,7 @@ const constructorMethod = app => {
     */
 
     app.get('/get_user_by_id', async function (req, res) {
-        let userId = req.body.userId;
+        let userId = req.query.userId;
         try {
             let getUser = await user_.get(userId);
             res.status(200).json(getUser);
@@ -32,7 +32,7 @@ const constructorMethod = app => {
     });
 
     app.get('/get_user_by_email', async function (req, res) {
-        let email = req.body.email;
+        let email = req.query.email;
         try {
             let getByEmail = await user_.getbyemail(email);
             res.status(200).json(getByEmail);
@@ -69,18 +69,21 @@ const constructorMethod = app => {
         }
     });
 
+    /*
+    // TODO: Need to update user collection to be able to use
     app.get('/users_near_me', async function (req, res) {
-        let km = req.body.radius;
-        let lat = req.body.lat;
-        let long = req.body.long;
+        let km = Number(req.query.range);
+        let myLat = Number(req.query.lat);
+        let myLong = Number(req.query.long);
         try {
-            let usersNearMe = await map_.UsersNearMeByKM(km, lat, long); //km, myLat, myLong
+            let usersNearMe = await map_.UsersNearMeByKM(km, myLat, myLong);
             console.log(usersNearMe);
             res.status(200).json(usersNearMe);
         } catch (e) {
             res.status(500).json(e);
         }
     });
+    */
 
 
     /*
@@ -110,7 +113,7 @@ const constructorMethod = app => {
     });
 
     app.get('/get_orders_by_user', async function (req, res) {
-        let userId = req.body.userId;
+        let userId = req.query.userId;
         try {
             let getOrdersByUser = await order_.getbyuser(userId);
             res.status(200).json(getOrdersByUser);
@@ -147,19 +150,6 @@ const constructorMethod = app => {
         }
     });
 
-    app.get('/order_near_me', async function (req, res) {
-        let meter = req.body.distant;
-        let lat = req.body.lat;
-        let long = req.body.long;
-        try {
-            let orderNearMe = await map_.OrderNearMeByMeter(meter, lat, long); //meter, myLat, myLong
-            console.log(orderNearMe);
-            res.status(200).json(orderNearMe);
-        } catch (e) {
-            res.status(500).json(e);
-        }
-    });
-
 
     /*
 
@@ -168,7 +158,7 @@ const constructorMethod = app => {
     */
 
     app.get('/top_n_states', async function (req, res) {
-        let n = req.body.amt;
+        let n = Number(req.query.num);
         try {
             let top_n_states = await map_.TopNState(n);
             console.log(top_n_states);
@@ -180,11 +170,11 @@ const constructorMethod = app => {
 
 
     app.get('/virus_near_me', async function (req, res) {
-        let km = req.body.radius;
-        let lat = req.body.lat;
-        let long = req.body.long;
+        let km = Number(req.query.range);
+        let myLat = Number(req.query.lat);
+        let myLong = Number(req.query.long);
         try {
-            let virusNearMe = await map_.VirusNearMeByKM(km, lat, long); //km, myLat, myLong
+            let virusNearMe = await map_.VirusNearMeByKM(km, myLat, myLong);
             console.log(virusNearMe);
             res.status(200).json(virusNearMe);
         } catch (e) {
