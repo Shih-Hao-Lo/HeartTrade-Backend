@@ -10,9 +10,9 @@ const constructorMethod = app => {
 
     */
 
-    app.get('/', async function (req, res) {
+    // app.get('/', async function (req, res) {
 
-    });
+    // });
 
 
     /*
@@ -88,6 +88,15 @@ const constructorMethod = app => {
     Order Routers
 
     */
+
+    app.get('/get_all_orders' , async (req , res) => {
+        try {
+            let allOrders = await order_.getAll();
+            res.status(200).json(allOrders);
+        } catch (e) {
+            res.status(500).json(e);
+        }
+    });
 
     app.get('/get_order_by_id', async function (req, res) {
         let orderId = req.body.orderId;

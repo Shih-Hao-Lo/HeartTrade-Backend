@@ -85,6 +85,38 @@ async function getbyuser(uid) {
 
 /*
     in:
+    ret:
+        order[] = [{
+                _id: ID!
+                user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
+                prod: String!
+                amt: Integer!
+                wish: String!
+                wish_amt: Integer!
+            }]
+
+*/
+async function getAll() {
+    const ordersCollections = await orders();
+    const targets = await ordersCollections.find({}).toArray();
+    for(x in targets) {
+        targets[x]['user'] = await user_.get(targets[x].user_id);
+        delete targets[x].user_id;
+        // 
+    }
+    console.log(targets);
+    return targets;
+}
+
+/*
+    in:
         user_id: String!
         prod: String!
         amt: Integer!
@@ -194,6 +226,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt){
 module.exports = {
     get,
     getbyuser,
+    getAll,
     addorders,
     updateorders
 };
