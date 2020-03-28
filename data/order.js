@@ -106,7 +106,8 @@ async function getbyuser(uid) {
 /*
     in:
         query: {
-            prod: String
+            prod: String,
+            wish: String
         }
     ret:
         order[] = [{
@@ -139,6 +140,15 @@ async function getAll(query) {
             }
         }
         targets = arr;
+    }
+    let arr2 = new Array(0);
+    if(query.wish != undefined) {
+        for(var x = 0 ; x < targets.length ; x++) {
+            if(contains(targets[x].wish , query.wish)) {
+                arr2.push(targets[x]);
+            }
+        }
+        targets = arr2;
     }
     
     for(x in targets) {
