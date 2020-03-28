@@ -10,8 +10,10 @@ const ObjectID = require('mongodb').ObjectID
                 _id: ID
                 username: String!
                 password: String!
-                Lat: Double!
-                Long_: Double!
+                location: {
+                    type: "Point"
+                    coordinates: [Long_ , Lat]
+                }
                 email: String!
             }
 
@@ -44,8 +46,10 @@ async function get(id) {
                 _id: ID
                 username: String!
                 password: String!
-                Lat: Double!
-                Long_: Double!
+                location: {
+                    type: "Point"
+                    coordinates: [Long_ , Lat]
+                }
                 email: String!
             }
 
@@ -70,8 +74,10 @@ async function getbyemail(email) {
             _id: ID
             username: String!
             password: String!
-            Lat: Double!
-            Long_: Double!
+            location: {
+                type: "Point"
+                coordinates: [Long_ , Lat]
+            }
             email: String!
         }
 */
@@ -85,8 +91,10 @@ async function adduser(username, password, Lat, Long_, email) {
     let newuser = {
         username: username,
         password: password,
-        Lat: Lat,
-        Long_: Long_,
+        location: {
+            type: "Point",
+            coordinates: [Long_ , Lat]
+        },
         email: email
     }
 
@@ -109,8 +117,10 @@ async function adduser(username, password, Lat, Long_, email) {
             _id: ID!
             username: String!
             password: String!
-            Lat: Double!
-            Long_: Double!
+            location: {
+                type: "Point"
+                coordinates: [Long_ , Lat]
+            }
             email: String!
         }
 */
@@ -135,8 +145,8 @@ async function updateuser(_id , username, password, Lat, Long_) {
 
     if(username == undefined) username = target.username;
     if(password == undefined) password = target.password;
-    if(Lat == undefined) Lat = target.Lat;
-    if(Long_ == undefined) Long_ = target.Long_;
+    if(Lat == undefined) Lat = target.location.coordinates[1];
+    if(Long_ == undefined) Long_ = target.location.coordinates[0];
 
 
     let updateuser = {
@@ -144,8 +154,10 @@ async function updateuser(_id , username, password, Lat, Long_) {
             _id: target._id,
             username: username,
             password: password,
-            Lat: Lat,
-            Long_: Long_,
+            location: {
+                type: "Point",
+                coordinates: [Long_ , Lat]
+            },
             email: target.email
         }
     }
