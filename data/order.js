@@ -195,7 +195,7 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
     }
 
     const ordersCollections = await orders();
-
+    let d = new Date();
     let neworder = {
         user_id: user_id,
         prod: prod,
@@ -203,7 +203,8 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
         wish: wish,
         wish_amt: wish_amt,
         status: "Open",
-        reserved_by: null
+        reserved_by: null,
+        last_updated: d.toUTCString()
     }
 
     const inserted = await ordersCollections.insertOne(neworder);
@@ -263,7 +264,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
     if(status == undefined) status = target.status;
     if(reserved_by == undefined) reserved_by = target.reserved_by;
 
-
+    let d = new Date();
     let updatedorder = {
         $set: {
             prod: prod,
@@ -271,7 +272,8 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
             wish: wish,
             wish_amt: wish_amt,
             status: status,
-            reserved_by: reserved_by
+            reserved_by: reserved_by,
+            last_updated: d.toUTCString()
         }
     }
 
