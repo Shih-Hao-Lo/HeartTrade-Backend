@@ -10,9 +10,9 @@ const constructorMethod = app => {
 
     */
 
-    app.get('/', async function (req, res) {
+    // app.get('/', async function (req, res) {
 
-    });
+    // });
 
 
     /*
@@ -22,7 +22,7 @@ const constructorMethod = app => {
     */
 
     app.get('/get_user_by_id', async function (req, res) {
-        let userId = req.body.userId;
+        let userId = req.query.userId;
         try {
             let getUser = await user_.get(userId);
             res.status(200).json(getUser);
@@ -32,7 +32,7 @@ const constructorMethod = app => {
     });
 
     app.get('/get_user_by_email', async function (req, res) {
-        let email = req.body.email;
+        let email = req.query.email;
         try {
             let getByEmail = await user_.getbyemail(email);
             res.status(200).json(getByEmail);
@@ -70,12 +70,11 @@ const constructorMethod = app => {
     });
 
     /*
-    // TODO: Need to update database user collection to be able to use this function
-    // url sample: /users_near_me?range=1000&lat=40.74381054816627&long=-74.03188705444336
+    // TODO: Need to update user collection to be able to use
     app.get('/users_near_me', async function (req, res) {
-        let km = Number(req.body.range);
-        let myLat = Number(req.body.lat);
-        let myLong = Number(req.body.long);
+        let km = Number(req.query.range);
+        let myLat = Number(req.query.lat);
+        let myLong = Number(req.query.long);
         try {
             let usersNearMe = await map_.UsersNearMeByKM(km, myLat, myLong);
             console.log(usersNearMe);
@@ -86,16 +85,13 @@ const constructorMethod = app => {
     });
     */
 
+
     /*
 
     Order Routers
 
     */
 
-<<<<<<< Updated upstream
-    app.get('/get_order_by_id', async function (req, res) {
-        let orderId = req.body.orderId;
-=======
     app.get('/get_all_orders' , async (req , res) => {
         try {
             let allOrders = await order_.getAll();
@@ -107,7 +103,6 @@ const constructorMethod = app => {
 
     app.get('/get_order_by_id/:id', async function (req, res) {
         let orderId = req.params.id;
->>>>>>> Stashed changes
         try {
             let getOrdersById = await order_.get(orderId);
             res.status(200).json(getOrdersById);

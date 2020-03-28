@@ -9,11 +9,20 @@ const ObjectID = require('mongodb').ObjectID
     ret:
         order = {
                 _id: ID!
-                user_id: String!
+                user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
                 prod: String!
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
             }
 
 */
@@ -33,6 +42,13 @@ async function get(id) {
     const ordersCollections = await orders();
     const target = await ordersCollections.findOne({ _id: id });
     if(target == null) throw 'order not found'
+
+    target['user'] = await user_.get(target.user_id);
+    delete target.user_id;
+    if(target.reserved_by != null) {
+        target['reserved_by_user'] = await user_.get(target.reserved_by);
+        delete target.reserved_by;
+    }
 
     return target;
 }
@@ -55,6 +71,8 @@ async function get(id) {
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
             }]
 
 */
@@ -62,14 +80,63 @@ async function getbyuser(uid) {
     if(uid == undefined) {
         throw "user id is empty! (in order.getbyuser)"
     }
+    if(uid.constructor != ObjectID){
+        if(ObjectID.isValid(uid)){
+            uid = new ObjectID(uid);
+        }
+        else{
+            throw 'User Id is invalid!(in order.getbyuserid)'
+        }
+    }
 
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ user_id: uid.toString() }).toArray();
+    const targets = await ordersCollections.find({ user_id: uid }).toArray();
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
         // console.log(target);
+        if(targets[x].reserved_by != null) {
+            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
+            delete targets[x].reserved_by;
+        }
     }
+    return targets;
+}
+
+/*
+    in:
+    ret:
+        order[] = [{
+                _id: ID!
+                user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
+                prod: String!
+                amt: Integer!
+                wish: String!
+                wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
+            }]
+
+*/
+async function getAll() {
+    const ordersCollections = await orders();
+    const targets = await ordersCollections.find({}).toArray();
+    for(x in targets) {
+        targets[x]['user'] = await user_.get(targets[x].user_id);
+        delete targets[x].user_id;
+        if(targets[x].reserved_by != null) {
+            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
+            delete targets[x].reserved_by;
+        }
+    }
+    // console.log(targets);
     return targets;
 }
 
@@ -83,11 +150,20 @@ async function getbyuser(uid) {
     ret:
         order = {
             _id: ID!
-            user_id: String!
+            user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
             prod: String!
             amt: Integer!
             wish: String!
             wish_amt: Integer!
+            status: Factor("Open" , "Pending" , "Closed")!
+            reserved_by: String
         }
 */
 async function addorders(user_id , prod , amt , wish , wish_amt) {
@@ -98,11 +174,13 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
     const ordersCollections = await orders();
 
     let neworder = {
-        user_id: user_id.toString(),
+        user_id: user_id,
         prod: prod,
         amt: amt,
         wish: wish,
-        wish_amt: wish_amt
+        wish_amt: wish_amt,
+        status: "Open",
+        reserved_by: null
     }
 
     const inserted = await ordersCollections.insertOne(neworder);
@@ -114,23 +192,34 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
 
 /*
     in:
-        post_id: ID!
-        prod: String!
-        amt: Integer!
-        wish: String!
-        wish_amt: Integer!
+        post_id: ID! or String!
+        prod: String
+        amt: Integer
+        wish: String
+        wish_amt: Integer
+        status: Factor("Open" , "Pending" , "Closed")
+        reserved_by: String
     ret:
         order = {
             _id: ID!
-            user_id: String!
+            user: {
+                    _id: ID
+                    username: String!
+                    password: String!
+                    Lat: Double!
+                    Long_: Double!
+                    email: String!
+                },
             prod: String!
             amt: Integer!
             wish: String!
             wish_amt: Integer!
+            status: Factor("Open" , "Pending" , "Closed")!
+            reserved_by: String
         }
 */
-async function updateorders(post_id , prod , amt , wish , wish_amt){
-    if(post_id === undefined){
+async function updateorders(post_id , prod , amt , wish , wish_amt, status , reserved_by){
+    if(post_id == undefined){
         throw 'input is empty (in user.get)';
     }
     if(post_id.constructor != ObjectID){
@@ -148,16 +237,18 @@ async function updateorders(post_id , prod , amt , wish , wish_amt){
     if(amt == undefined) amt = target.amt;
     if(wish == undefined) wish = target.wish;
     if(wish_amt == undefined) wish_amt = target.wish_amt;
+    if(status == undefined) status = target.status;
+    if(reserved_by == undefined) reserved_by = target.reserved_by;
 
 
     let updatedorder = {
         $set: {
-            _id: target._id,
-            user_id: target.user_id,
             prod: prod,
             amt: amt,
             wish: wish,
-            wish_amt: wish_amt
+            wish_amt: wish_amt,
+            status: status,
+            reserved_by: reserved_by
         }
     }
 
@@ -170,6 +261,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt){
 module.exports = {
     get,
     getbyuser,
+    getAll,
     addorders,
     updateorders
 };
