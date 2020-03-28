@@ -182,7 +182,7 @@ async function updateuser(_id , username, password, Lat, Long_) {
 */
 async function UsersNearMeByKM(km, myLat, myLong) {
     if (isNaN(km) || isNaN(myLat) || isNaN(myLong)) throw 'Input data type must be a integer';
-    if (km > 100) throw 'Input number is too large (must be in range 1-100)';
+    if (km > 10000) throw 'Input number is too large (must be in range 1-10000)';
 
     const usersCollections = await users();
     

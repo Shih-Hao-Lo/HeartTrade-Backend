@@ -69,7 +69,6 @@ const constructorMethod = app => {
         }
     });
 
-    // TODO: Need to update user collection to be able to use
     app.get('/users_near_me', async function (req, res) {
         let km = Number(req.query.range);
         let myLat = Number(req.query.lat);
