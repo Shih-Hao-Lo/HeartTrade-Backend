@@ -98,8 +98,9 @@ const constructorMethod = app => {
         }
     });
 
-    app.get('/get_order_by_id', async function (req, res) {
+    app.get('/get_order_by_id/:id', async function (req, res) {
         let orderId = req.body.orderId;
+        let id = req.params.id
         try {
             let getOrdersById = await order_.get(orderId);
             res.status(200).json(getOrdersById);

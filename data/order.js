@@ -21,6 +21,8 @@ const ObjectID = require('mongodb').ObjectID
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
             }
 
 */
@@ -65,6 +67,8 @@ async function get(id) {
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
             }]
 
 */
@@ -72,9 +76,17 @@ async function getbyuser(uid) {
     if(uid == undefined) {
         throw "user id is empty! (in order.getbyuser)"
     }
+    if(uid.constructor != ObjectID){
+        if(ObjectID.isValid(uid)){
+            uid = new ObjectID(uid);
+        }
+        else{
+            throw 'User Id is invalid!(in order.getbyuserid)'
+        }
+    }
 
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ user_id: uid.toString() }).toArray();
+    const targets = await ordersCollections.find({ user_id: uid }).toArray();
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
@@ -100,6 +112,8 @@ async function getbyuser(uid) {
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
+                status: Factor("Open" , "Pending" , "Closed")!
+                reserved_by: String
             }]
 
 */
@@ -109,9 +123,8 @@ async function getAll() {
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
-        // 
     }
-    console.log(targets);
+    // console.log(targets);
     return targets;
 }
 
@@ -137,6 +150,8 @@ async function getAll() {
             amt: Integer!
             wish: String!
             wish_amt: Integer!
+            status: Factor("Open" , "Pending" , "Closed")!
+            reserved_by: String
         }
 */
 async function addorders(user_id , prod , amt , wish , wish_amt) {
@@ -147,11 +162,13 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
     const ordersCollections = await orders();
 
     let neworder = {
-        user_id: user_id.toString(),
+        user_id: user_id,
         prod: prod,
         amt: amt,
         wish: wish,
-        wish_amt: wish_amt
+        wish_amt: wish_amt,
+        status: "Open",
+        reserved_by: null
     }
 
     const inserted = await ordersCollections.insertOne(neworder);
@@ -168,6 +185,8 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
         amt: Integer
         wish: String
         wish_amt: Integer
+        status: Factor("Open" , "Pending" , "Closed")
+        reserved_by: String
     ret:
         order = {
             _id: ID!
@@ -183,10 +202,12 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
             amt: Integer!
             wish: String!
             wish_amt: Integer!
+            status: Factor("Open" , "Pending" , "Closed")!
+            reserved_by: String
         }
 */
-async function updateorders(post_id , prod , amt , wish , wish_amt){
-    if(post_id === undefined){
+async function updateorders(post_id , prod , amt , wish , wish_amt, status , reserved_by){
+    if(post_id == undefined){
         throw 'input is empty (in user.get)';
     }
     if(post_id.constructor != ObjectID){
@@ -204,16 +225,18 @@ async function updateorders(post_id , prod , amt , wish , wish_amt){
     if(amt == undefined) amt = target.amt;
     if(wish == undefined) wish = target.wish;
     if(wish_amt == undefined) wish_amt = target.wish_amt;
+    if(status == undefined) status = target.status;
+    if(reserved_by == undefined) reserved_by = target.reserved_by;
 
 
     let updatedorder = {
         $set: {
-            _id: target._id,
-            user_id: target.user_id,
             prod: prod,
             amt: amt,
             wish: wish,
-            wish_amt: wish_amt
+            wish_amt: wish_amt,
+            status: status,
+            reserved_by: reserved_by
         }
     }
 
