@@ -105,6 +105,9 @@ async function getbyuser(uid) {
 
 /*
     in:
+        query: {
+            prod: String
+        }
     ret:
         order[] = [{
                 _id: ID!
@@ -125,9 +128,19 @@ async function getbyuser(uid) {
             }]
 
 */
-async function getAll() {
+async function getAll(query) {
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({}).toArray();
+    let targets = await ordersCollections.find({}).toArray();
+    let arr = new Array(0);
+    if(query.prod != undefined) {
+        for(var x = 0 ; x < targets.length ; x++) {
+            if(contains(targets[x].prod , query.prod)) {
+                arr.push(targets[x]);
+            }
+        }
+        targets = arr;
+    }
+    
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
@@ -257,6 +270,23 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
 
     return await get(post_id);
 }
+
+/* Support function */
+function contains(s1 , s2) {
+    if(s1.length < s2.length) return false;
+    for(var x = 0 ; x <= s1.length - s2.length ; x++) {
+        if(s1.charAt(x) == s2.charAt(0)) {
+            var cnt = 0;
+            for(var y = 0 ; y < s2.length ; y++) {
+                if(s1.charAt(x+y) != s2.charAt(y)) break;
+                cnt++;
+            }
+            if(cnt == s2.length) return true;
+        }
+    }
+    return false;
+}
+
 
 module.exports = {
     get,

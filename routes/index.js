@@ -94,7 +94,8 @@ const constructorMethod = app => {
 
     app.get('/get_all_orders' , async (req , res) => {
         try {
-            let allOrders = await order_.getAll();
+            let query = req.query;
+            let allOrders = await order_.getAll(query);
             res.status(200).json(allOrders);
         } catch (e) {
             res.status(500).json(e);
