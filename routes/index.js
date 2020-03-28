@@ -94,13 +94,13 @@ const constructorMethod = app => {
             let allOrders = await order_.getAll();
             res.status(200).json(allOrders);
         } catch (e) {
+            console.log(e);
             res.status(500).json(e);
         }
     });
 
     app.get('/get_order_by_id/:id', async function (req, res) {
-        let orderId = req.body.orderId;
-        let id = req.params.id
+        let orderId = req.params.id;
         try {
             let getOrdersById = await order_.get(orderId);
             res.status(200).json(getOrdersById);

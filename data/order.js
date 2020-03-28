@@ -45,6 +45,10 @@ async function get(id) {
 
     target['user'] = await user_.get(target.user_id);
     delete target.user_id;
+    if(target.reserved_by != null) {
+        target['reserved_by_user'] = await user_.get(target.reserved_by);
+        delete target.reserved_by;
+    }
 
     return target;
 }
@@ -91,6 +95,10 @@ async function getbyuser(uid) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
         // console.log(target);
+        if(targets[x].reserved_by != null) {
+            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
+            delete targets[x].reserved_by;
+        }
     }
     return targets;
 }
@@ -123,6 +131,10 @@ async function getAll() {
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
+        if(targets[x].reserved_by != null) {
+            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
+            delete targets[x].reserved_by;
+        }
     }
     // console.log(targets);
     return targets;
