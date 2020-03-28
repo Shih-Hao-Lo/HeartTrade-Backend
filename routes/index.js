@@ -69,19 +69,22 @@ const constructorMethod = app => {
         }
     });
 
+    /*
+    // TODO: Need to update database user collection to be able to use this function
+    // url sample: /users_near_me?range=1000&lat=40.74381054816627&long=-74.03188705444336
     app.get('/users_near_me', async function (req, res) {
-        let km = req.body.radius;
-        let lat = req.body.lat;
-        let long = req.body.long;
+        let km = Number(req.body.range);
+        let myLat = Number(req.body.lat);
+        let myLong = Number(req.body.long);
         try {
-            let usersNearMe = await map_.UsersNearMeByKM(km, lat, long); //km, myLat, myLong
+            let usersNearMe = await map_.UsersNearMeByKM(km, myLat, myLong);
             console.log(usersNearMe);
             res.status(200).json(usersNearMe);
         } catch (e) {
             res.status(500).json(e);
         }
     });
-
+    */
 
     /*
 
@@ -89,8 +92,22 @@ const constructorMethod = app => {
 
     */
 
+<<<<<<< Updated upstream
     app.get('/get_order_by_id', async function (req, res) {
         let orderId = req.body.orderId;
+=======
+    app.get('/get_all_orders' , async (req , res) => {
+        try {
+            let allOrders = await order_.getAll();
+            res.status(200).json(allOrders);
+        } catch (e) {
+            res.status(500).json(e);
+        }
+    });
+
+    app.get('/get_order_by_id/:id', async function (req, res) {
+        let orderId = req.params.id;
+>>>>>>> Stashed changes
         try {
             let getOrdersById = await order_.get(orderId);
             res.status(200).json(getOrdersById);
@@ -99,8 +116,9 @@ const constructorMethod = app => {
         }
     });
 
+    // url sample: /get_orders_by_user?userId=5e7eaa2280d72a6060225c55
     app.get('/get_orders_by_user', async function (req, res) {
-        let userId = req.body.userId;
+        let userId = req.query.userId;
         try {
             let getOrdersByUser = await order_.getbyuser(userId);
             res.status(200).json(getOrdersByUser);
@@ -137,19 +155,6 @@ const constructorMethod = app => {
         }
     });
 
-    app.get('/order_near_me', async function (req, res) {
-        let meter = req.body.distant;
-        let lat = req.body.lat;
-        let long = req.body.long;
-        try {
-            let orderNearMe = await map_.OrderNearMeByMeter(meter, lat, long); //meter, myLat, myLong
-            console.log(orderNearMe);
-            res.status(200).json(orderNearMe);
-        } catch (e) {
-            res.status(500).json(e);
-        }
-    });
-
 
     /*
 
@@ -157,8 +162,9 @@ const constructorMethod = app => {
 
     */
 
+    // url sample: /top_n_states?num=3
     app.get('/top_n_states', async function (req, res) {
-        let n = req.body.amt;
+        let n = Number(req.query.num);
         try {
             let top_n_states = await map_.TopNState(n);
             console.log(top_n_states);
@@ -168,13 +174,13 @@ const constructorMethod = app => {
         }
     });
 
-
+    // url sample: /virus_near_me?range=1000&lat=40.74381054816627&long=-74.03188705444336
     app.get('/virus_near_me', async function (req, res) {
-        let km = req.body.radius;
-        let lat = req.body.lat;
-        let long = req.body.long;
+        let km = Number(req.query.range);
+        let myLat = Number(req.query.lat);
+        let myLong = Number(req.query.long);
         try {
-            let virusNearMe = await map_.VirusNearMeByKM(km, lat, long); //km, myLat, myLong
+            let virusNearMe = await map_.VirusNearMeByKM(km, myLat, myLong);
             console.log(virusNearMe);
             res.status(200).json(virusNearMe);
         } catch (e) {
