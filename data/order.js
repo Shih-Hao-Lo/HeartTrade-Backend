@@ -95,6 +95,33 @@ async function getbyuser(uid) {
     return targets;
 }
 
+async function getpendingbyuser(uid) {
+    if(uid == undefined) {
+        throw "user id is empty! (in order.getbyuser)"
+    }
+    if(uid.constructor != ObjectID){
+        if(ObjectID.isValid(uid)){
+            uid = new ObjectID(uid);
+        }
+        else{
+            throw 'User Id is invalid!(in order.getbyuserid)'
+        }
+    }
+
+    const ordersCollections = await orders();
+    const targets = await ordersCollections.find({ user_id: uid }).toArray();
+    for(x in targets) {
+        targets[x]['user'] = await user_.get(targets[x].user_id);
+        delete targets[x].user_id;
+        // console.log(target);
+        if(targets[x].reserved_by != null) {
+            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
+            delete targets[x].reserved_by;
+        }
+    }
+    return targets;
+}
+
 /*
     in:
         query: {
@@ -261,7 +288,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
             wish: wish,
             wish_amt: wish_amt,
             status: status,
-            reserved_by: reserved_by,
+            reserved_by: reserved_by.constructor == ObjectID ? reserved_by : new ObjectID(reserved_by),
             last_updated: d.toUTCString(),
             description: description,
             img: img
