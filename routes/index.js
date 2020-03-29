@@ -124,6 +124,15 @@ const constructorMethod = app => {
         }
     });
 
+    app.get('/get_pending_by_user' , async (req , res) => {
+        try {
+            let pendingbyuser = await order_.getpendingbyuser(req.query.userId);
+            res.status(200).json(pendingbyuser)
+        } catch(e) {
+            res.status(500).json(e)
+        }
+    });
+
     app.post('/add_order', async function (req, res) {
         let userId = req.body.userId;
         let prod = req.body.prod;

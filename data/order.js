@@ -109,7 +109,7 @@ async function getpendingbyuser(uid) {
     }
 
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ reserved_by: uid }).toArray();
+    const targets = await ordersCollections.find({ reserved_by: uid , status: "Pending" }).toArray();
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
