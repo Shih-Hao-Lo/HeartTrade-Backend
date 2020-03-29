@@ -34,7 +34,7 @@ const constructorMethod = app => {
     app.get('/get_user_by_email', async function (req, res) {
         let email = req.query.email;
         try {
-            let getByEmail = await user_.getbyemail(email);
+            let getByEmail = await user_.getbyemail(email , req.query.Lat , req.query.Long);
             res.status(200).json(getByEmail);
         } catch (e) {
             res.status(500).json(e);

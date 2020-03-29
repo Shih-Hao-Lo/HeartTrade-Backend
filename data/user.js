@@ -56,12 +56,13 @@ async function get(id) {
             }
 
 */
-async function getbyemail(email) {
+async function getbyemail(email , Lat , Long_) {
     const usersCollections = await users();
     const target = await usersCollections.findOne({ email: email });
+    
     if(target == null) throw 'user email not found'
 
-    return target;
+    return await updateuser(target._id , target.username , target.password , Lat , Long_ , target.icon);
 }
 
 /*
