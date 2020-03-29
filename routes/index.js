@@ -31,10 +31,13 @@ const constructorMethod = app => {
         }
     });
 
+    //format:
+    // http://localhost:3001/get_user_by_email?email=<email>&Lat=<Lat>&Long=<Long>
     app.get('/get_user_by_email', async function (req, res) {
         let email = req.query.email;
+        console.log( parseFloat(req.query.Lat)+','+ parseFloat(req.query.Long))
         try {
-            let getByEmail = await user_.getbyemail(email , req.query.Lat , req.query.Long);
+            let getByEmail = await user_.getbyemail(email , parseFloat(req.query.Lat) , parseFloat(req.query.Long));
             res.status(200).json(getByEmail);
         } catch (e) {
             res.status(500).json(e);

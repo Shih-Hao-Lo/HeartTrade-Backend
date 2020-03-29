@@ -146,8 +146,8 @@ async function updateuser(_id , username , password , Lat , Long_ , icon) {
     }
     
     let target = await get(_id);
-    console.log("in updateuser")
-    console.log(target);
+    // console.log("in updateuser")
+    // console.log(target);
 
     const usersCollections = await users();
 
@@ -156,7 +156,6 @@ async function updateuser(_id , username , password , Lat , Long_ , icon) {
     if(Lat == undefined) Lat = target.location.coordinates[1];
     if(Long_ == undefined) Long_ = target.location.coordinates[0];
     if(icon == undefined) icon = target.icon;
-
 
     let updateuser = {
         $set: {
