@@ -9,20 +9,16 @@ const ObjectID = require('mongodb').ObjectID
     ret:
         order = {
                 _id: ID!
-                user: {
-                    _id: ID
-                    username: String!
-                    password: String!
-                    Lat: Double!
-                    Long_: Double!
-                    email: String!
-                },
+                user: user
                 prod: String!
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
                 status: Factor("Open" , "Pending" , "Closed")!
-                reserved_by: String
+                reserved_by: user
+                last_updated: UTC String!
+                description: String!
+                img: String!
             }
 
 */
@@ -59,20 +55,16 @@ async function get(id) {
     ret:
         order[] = [{
                 _id: ID!
-                user: {
-                    _id: ID
-                    username: String!
-                    password: String!
-                    Lat: Double!
-                    Long_: Double!
-                    email: String!
-                },
+                user: user!
                 prod: String!
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
                 status: Factor("Open" , "Pending" , "Closed")!
-                reserved_by: String
+                reserved_by: user
+                last_updated: UTC String!
+                description: String!
+                img: String!
             }]
 
 */
@@ -106,26 +98,22 @@ async function getbyuser(uid) {
 /*
     in:
         query: {
-            prod: String,
+            prod: String
             wish: String
         }
     ret:
         order[] = [{
                 _id: ID!
-                user: {
-                    _id: ID
-                    username: String!
-                    password: String!
-                    Lat: Double!
-                    Long_: Double!
-                    email: String!
-                },
+                user: user!
                 prod: String!
                 amt: Integer!
                 wish: String!
                 wish_amt: Integer!
                 status: Factor("Open" , "Pending" , "Closed")!
-                reserved_by: String
+                reserved_by: user
+                last_updated: UTC String
+                description: String
+                img: String
             }]
 
 */
@@ -170,27 +158,25 @@ async function getAll(query) {
         amt: Integer!
         wish: String!
         wish_amt: Integer!
+        description: String!
+        img: String!
     ret:
         order = {
             _id: ID!
-            user: {
-                    _id: ID
-                    username: String!
-                    password: String!
-                    Lat: Double!
-                    Long_: Double!
-                    email: String!
-                },
+            user: user!
             prod: String!
             amt: Integer!
             wish: String!
             wish_amt: Integer!
             status: Factor("Open" , "Pending" , "Closed")!
-            reserved_by: String
+            reserved_by: user
+            last_updated: UTC String
+            description: String
+            img: String
         }
 */
-async function addorders(user_id , prod , amt , wish , wish_amt, description) {
-    if (user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined || description == undefined) {
+async function addorders(user_id , prod , amt , wish , wish_amt , description , img) {
+    if(user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined || description == undefined || img == undefined) {
         throw "Input missing! (in order.addorders)"
     }
 
@@ -207,7 +193,8 @@ async function addorders(user_id , prod , amt , wish , wish_amt, description) {
         status: "Open",
         reserved_by: null,
         last_updated: d.toUTCString(),
-        description: description
+        description: description,
+        img: img
     }
 
     const inserted = await ordersCollections.insertOne(neworder);
@@ -226,26 +213,23 @@ async function addorders(user_id , prod , amt , wish , wish_amt, description) {
         wish_amt: Integer
         status: Factor("Open" , "Pending" , "Closed")
         reserved_by: String
+        description: String
     ret:
         order = {
             _id: ID!
-            user: {
-                    _id: ID
-                    username: String!
-                    password: String!
-                    Lat: Double!
-                    Long_: Double!
-                    email: String!
-                },
+            user: user!
             prod: String!
             amt: Integer!
             wish: String!
             wish_amt: Integer!
             status: Factor("Open" , "Pending" , "Closed")!
-            reserved_by: String
+            reserved_by: user
+            last_updated: UTC String
+            description: String
+            img: String
         }
 */
-async function updateorders(post_id , prod , amt , wish , wish_amt, status , reserved_by){
+async function updateorders(post_id , prod , amt , wish , wish_amt, status , reserved_by , description , img){
     if(post_id == undefined){
         throw 'input is empty (in user.get)';
     }
@@ -266,6 +250,8 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
     if(wish_amt == undefined) wish_amt = target.wish_amt;
     if(status == undefined) status = target.status;
     if(reserved_by == undefined) reserved_by = target.reserved_by;
+    if(description == undefined) description = target.description;
+    if(img == undefined) img = target.img
 
     let d = new Date();
     let updatedorder = {
@@ -276,7 +262,9 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
             wish_amt: wish_amt,
             status: status,
             reserved_by: reserved_by,
-            last_updated: d.toUTCString()
+            last_updated: d.toUTCString(),
+            description: description,
+            img: img
         }
     }
 

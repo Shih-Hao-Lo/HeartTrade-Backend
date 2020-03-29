@@ -10,9 +10,12 @@ const ObjectID = require('mongodb').ObjectID
                 _id: ID
                 username: String!
                 password: String!
-                Lat: Double!
-                Long_: Double!
+                location: {
+                    type: "Point"
+                    coordinates: [Long_ , Lat]
+                }
                 email: String!
+                icon: Stirng!
             }
 
 */
@@ -44,9 +47,12 @@ async function get(id) {
                 _id: ID
                 username: String!
                 password: String!
-                Lat: Double!
-                Long_: Double!
+                location: {
+                    type: "Point"
+                    coordinates: [Long_ , Lat]
+                }
                 email: String!
+                icon: String!
             }
 
 */
@@ -65,18 +71,22 @@ async function getbyemail(email) {
         Lat: Double!
         Long_: Double!
         email: String!
+        icon: String!
     ret:
         user = {
             _id: ID
             username: String!
             password: String!
-            Lat: Double!
-            Long_: Double!
+            location: {
+                type: "Point"
+                coordinates: [Long_ , Lat]
+            }
             email: String!
+            icon: String!
         }
 */
-async function adduser(username, password, Lat, Long_, email) {
-    if(username == undefined || password == undefined || Lat == undefined || Long_ == undefined || email == undefined) {
+async function adduser(username, password, Lat, Long_, email , icon) {
+    if(username == undefined || password == undefined || Lat == undefined || Long_ == undefined || email == undefined || icon == undefined) {
         throw "Input missing! (in user.addusers)"
     }
 
@@ -85,9 +95,12 @@ async function adduser(username, password, Lat, Long_, email) {
     let newuser = {
         username: username,
         password: password,
-        Lat: Lat,
-        Long_: Long_,
-        email: email
+        location: {
+            type: "Point",
+            coordinates: [Long_ , Lat]
+        },
+        email: email,
+        icon: icon
     }
 
     const inserted = await usersCollections.insertOne(newuser);
@@ -104,17 +117,21 @@ async function adduser(username, password, Lat, Long_, email) {
         password: String
         Lat: Double
         Long_: Double
+        icon: String
     ret:
         user = {
             _id: ID!
             username: String!
             password: String!
-            Lat: Double!
-            Long_: Double!
+            location: {
+                type: "Point"
+                coordinates: [Long_ , Lat]
+            }
             email: String!
+            icon: String!
         }
 */
-async function updateuser(_id , username, password, Lat, Long_) {
+async function updateuser(_id , username , password , Lat , Long_ , icon) {
     if(_id === undefined){
         throw 'input is empty (in user.get)';
     }
@@ -135,8 +152,9 @@ async function updateuser(_id , username, password, Lat, Long_) {
 
     if(username == undefined) username = target.username;
     if(password == undefined) password = target.password;
-    if(Lat == undefined) Lat = target.Lat;
-    if(Long_ == undefined) Long_ = target.Long_;
+    if(Lat == undefined) Lat = target.location.coordinates[1];
+    if(Long_ == undefined) Long_ = target.location.coordinates[0];
+    if(icon == undefined) icon = target.icon;
 
 
     let updateuser = {
@@ -144,9 +162,12 @@ async function updateuser(_id , username, password, Lat, Long_) {
             _id: target._id,
             username: username,
             password: password,
-            Lat: Lat,
-            Long_: Long_,
-            email: target.email
+            location: {
+                type: "Point",
+                coordinates: [Long_ , Lat]
+            },
+            email: target.email,
+            icon: icon
         }
     }
 

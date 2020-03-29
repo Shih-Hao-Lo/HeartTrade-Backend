@@ -78,6 +78,7 @@ const constructorMethod = app => {
             console.log(usersNearMe);
             res.status(200).json(usersNearMe);
         } catch (e) {
+            console.log(e)
             res.status(500).json(e);
         }
     });
