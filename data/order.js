@@ -109,7 +109,7 @@ async function getpendingbyuser(uid) {
     }
 
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ user_id: uid }).toArray();
+    const targets = await ordersCollections.find({ reserved_by: uid }).toArray();
     for(x in targets) {
         targets[x]['user'] = await user_.get(targets[x].user_id);
         delete targets[x].user_id;
@@ -321,6 +321,7 @@ function contains(s1 , s2) {
 module.exports = {
     get,
     getbyuser,
+    getpendingbyuser,
     getAll,
     addorders,
     updateorders
