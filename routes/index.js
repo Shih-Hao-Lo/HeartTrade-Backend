@@ -126,8 +126,9 @@ const constructorMethod = app => {
         let amt = req.body.amt;
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
+        let description = req.body.description;
         try {
-            let addOrder = await order_.addorders(userId, prod, amt, wish, wish_amt);
+            let addOrder = await order_.addorders(userId, prod, amt, wish, wish_amt, description);
             res.status(200).json(addOrder);
         } catch (e) {
             res.status(500).json(e);

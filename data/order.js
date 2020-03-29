@@ -189,8 +189,8 @@ async function getAll(query) {
             reserved_by: String
         }
 */
-async function addorders(user_id , prod , amt , wish , wish_amt) {
-    if(user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined) {
+async function addorders(user_id , prod , amt , wish , wish_amt, description) {
+    if (user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined || description == undefined) {
         throw "Input missing! (in order.addorders)"
     }
 
@@ -204,7 +204,8 @@ async function addorders(user_id , prod , amt , wish , wish_amt) {
         wish_amt: wish_amt,
         status: "Open",
         reserved_by: null,
-        last_updated: d.toUTCString()
+        last_updated: d.toUTCString(),
+        description: description
     }
 
     const inserted = await ordersCollections.insertOne(neworder);
