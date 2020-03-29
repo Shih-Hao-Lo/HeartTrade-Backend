@@ -318,11 +318,49 @@ function contains(s1 , s2) {
 }
 
 
+/*
+    in:
+        userId: ID! or String!,
+        orderId: ID! or String!
+    ret:
+        updated_order = {
+            _id: ID!
+            user: user!
+            prod: String!
+            amt: Integer!
+            wish: String!
+            wish_amt: Integer!
+            status: Factor("Open" , "Pending" , "Closed")!
+            reserved_by: user
+            last_updated: UTC String
+            description: String
+            img: String
+        }
+*/
+async function AssignOrderToUser(userId, orderId) {
+    let user;
+    let order;
+
+    // Check if user / order exist in database
+    try { user = await user_.get(userId); } catch(e) { throw e; }
+    try { order = await get(orderId); } catch(e) { throw e; }
+
+    // Can't buy things from yourself
+    if (user._id.equals(order.user._id)) {
+        let updatedOrder = { self_buy: true }
+        return updatedOrder;
+    }
+
+    return await updateorders(order._id, undefined, undefined, undefined, undefined, "Pending", user._id, undefined, undefined);
+}
+
+
 module.exports = {
     get,
     getbyuser,
     getpendingbyuser,
     getAll,
     addorders,
-    updateorders
+    updateorders,
+    AssignOrderToUser
 };
