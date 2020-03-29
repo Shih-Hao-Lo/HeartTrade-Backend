@@ -194,6 +194,8 @@ async function addorders(user_id , prod , amt , wish , wish_amt, description) {
         throw "Input missing! (in order.addorders)"
     }
 
+    user_id = new ObjectID(user_id);
+
     const ordersCollections = await orders();
     let d = new Date();
     let neworder = {
