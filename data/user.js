@@ -86,7 +86,7 @@ async function getbyemail(email) {
         }
 */
 async function adduser(username, password, Lat, Long_, email , icon) {
-    if(username == undefined || password == undefined || Lat == undefined || Long_ == undefined || email == undefined || icon == undefined) {
+    if(username == undefined || password == undefined || Lat == undefined || Long_ == undefined || email == undefined) {
         throw "Input missing! (in user.addusers)"
     }
 
