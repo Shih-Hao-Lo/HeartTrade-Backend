@@ -150,6 +150,18 @@ const constructorMethod = app => {
         }
     });
 
+    // url samepl: localhost:3001/assign_order_to_user?userId=5e7f9708ba65143aa8a0f13e&orderId=5e7f9708ba65143aa8a0f140
+    app.put('/assign_order_to_user', async function(req, res) {
+        let userId = req.query.userId;
+        let orderId = req.query.orderId;
+        try {
+            let assignOrder = await order_.AssignOrderToUser(userId, orderId);
+            res.status(200).json(assignOrder);
+        } catch(e) {
+            res.status(500).json(e);
+        }
+    });
+
 
     /*
 
