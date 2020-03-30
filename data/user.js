@@ -164,7 +164,7 @@ async function updateuser(_id , username , password , Lat , Long_) {
     }
 
     const updated = await usersCollections.updateOne({ _id: _id } , updateuser);
-    if(updated.modifiedCount === 0) throw 'Update fail! (in user.updateuser)';
+    //if(updated.modifiedCount === 0) throw 'Update fail! (in user.updateuser)';
 
     return await get(_id);
 }
