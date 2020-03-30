@@ -208,7 +208,7 @@ async function getcompletebyuser(uid) {
 */
 async function getAll(query) {
     const ordersCollections = await orders();
-    let targets = await ordersCollections.find({}).toArray();
+    let targets = await ordersCollections.find({status: "Open"}).toArray();
     let arr = new Array(0);
     if(query.prod != undefined) {
         for(var x = 0 ; x < targets.length ; x++) {

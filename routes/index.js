@@ -187,6 +187,8 @@ const constructorMethod = app => {
             let assignOrder = await order_.AssignOrderToUser(userId, orderId);
             res.status(200).json(assignOrder);
         } catch(e) {
+            console.log('err in assign order to user')
+            console.log(e)
             res.status(500).json(e);
         }
     });
