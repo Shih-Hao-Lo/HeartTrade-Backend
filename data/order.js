@@ -92,6 +92,7 @@ async function getbyuser(uid) {
             delete targets[x].reserved_by;
         }
     }
+    targets.sort(datecompare);
     return targets;
 }
 
@@ -135,6 +136,7 @@ async function getpendingbyuser(uid) {
         sold[x]['role']='seller';
         out.push(sold[x]);
     }
+    out.sort(datecompare);
     return out;
 }
 
@@ -178,6 +180,7 @@ async function getcompletebyuser(uid) {
         sold[x]['role']='seller';
         out.push(sold[x]);
     }
+    out.sort(datecompare);
     return out;
 }
 
@@ -234,6 +237,8 @@ async function getAll(query) {
         }
     }
     // console.log(targets);
+
+    targets.sort(datecompare);
     return targets;
 }
 
@@ -376,6 +381,13 @@ function contains(s1 , s2) {
     return false;
 }
 
+function datecompare(a , b) {
+    let d1 = new Date(a.last_updated);
+    let d2 = new Date(b.last_updated);
+
+    return d2-d1
+}
+
 
 /*
     in:
@@ -412,7 +424,6 @@ async function AssignOrderToUser(userId, orderId) {
 
     return await updateorders(order._id, undefined, undefined, undefined, undefined, "Pending", user._id, undefined, undefined);
 }
-
 
 module.exports = {
     get,
