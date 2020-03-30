@@ -321,30 +321,30 @@ async function addorders(user_id , prod , amt , wish , wish_amt , description , 
         }
 */
 async function updateorders(post_id , prod , amt , wish , wish_amt, status , reserved_by , description , img){
-    if(post_id == undefined){
-        throw 'input is empty (in user.get)';
-    }
-    if(post_id.constructor != ObjectID){
-        if(ObjectID.isValid(post_id)){
-            post_id = new ObjectID(post_id);
-        }
-        else{
-            throw 'Id is invalid!(in order.updateorder)'
-        }
+    if(post_id == undefined) { throw 'input is empty (in user.get)'; }
+    if(post_id.constructor != ObjectID) {
+        if(ObjectID.isValid(post_id)) post_id = new ObjectID(post_id);
+        else throw 'Id is invalid!(in order.updateorder)';
     }
 
     let target = await get(post_id);
+
     const ordersCollections = await orders();
     if(prod == undefined) prod = target.prod;
     if(amt == undefined) amt = target.amt;
     if(wish == undefined) wish = target.wish;
     if(wish_amt == undefined) wish_amt = target.wish_amt;
     if(status == undefined) status = target.status;
-    if(reserved_by == undefined) reserved_by = target.reserved_by;
+    if(reserved_by === undefined) reserved_by = target.reserved_by_user._id;
     if(description == undefined) description = target.description;
     if(img == undefined) img = target.img
 
+    let reservedTmp;
+    if (reserved_by === null) reservedTmp = null;
+    else reservedTmp = reserved_by.constructor == ObjectID ? reserved_by : new ObjectID(reserved_by);
+
     let d = new Date();
+
     let updatedorder = {
         $set: {
             prod: prod,
@@ -352,7 +352,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
             wish: wish,
             wish_amt: wish_amt,
             status: status,
-            reserved_by: reserved_by.constructor == ObjectID ? reserved_by : new ObjectID(reserved_by),
+            reserved_by: reservedTmp,
             last_updated: d.toUTCString(),
             description: description,
             img: img
@@ -360,7 +360,7 @@ async function updateorders(post_id , prod , amt , wish , wish_amt, status , res
     }
 
     const updated = await ordersCollections.updateOne({ _id: post_id } , updatedorder);
-    if(updated.modifiedCount === 0) throw 'Update fail! (in order.updateorders)';
+    if(updated.modifiedCount === 0) throw 'Update Fail! (updateorders())';
 
     return await get(post_id);
 }
@@ -425,6 +425,27 @@ async function AssignOrderToUser(userId, orderId) {
     return await updateorders(order._id, undefined, undefined, undefined, undefined, "Pending", user._id, undefined, undefined);
 }
 
+
+async function SetOrderComplete(orderId) {
+    let order;
+
+    // Check if order exist in database
+    try { order = await get(orderId); } catch(e) { throw e; }
+
+    return await updateorders(order._id, undefined, undefined, undefined, undefined, "Completed", undefined, undefined, undefined);
+}
+
+async function SetOrderOpen(orderId) {
+    let order;
+
+    // Check if order exist in database
+    try { order = await get(orderId); } catch(e) { throw e; }
+
+    return await updateorders(order._id, undefined, undefined, undefined, undefined, "Open", null, undefined, undefined);
+}
+
+
+
 module.exports = {
     get,
     getbyuser,
@@ -433,5 +454,7 @@ module.exports = {
     getAll,
     addorders,
     updateorders,
-    AssignOrderToUser
+    AssignOrderToUser,
+    SetOrderComplete,
+    SetOrderOpen
 };
