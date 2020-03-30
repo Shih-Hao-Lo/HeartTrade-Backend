@@ -111,6 +111,7 @@ async function getpendingbyuser(uid) {
     const ordersCollections = await orders();
     const bought = await ordersCollections.find({ reserved_by: uid , status: "Pending" }).toArray();
     const sold = await ordersCollections.find({ user_id: uid , status: "Pending" }).toArray();
+    let out = new Array(0);
     for(x in bought) {
         bought[x]['user'] = await user_.get(bought[x].user_id);
         delete bought[x].user_id;
@@ -119,6 +120,8 @@ async function getpendingbyuser(uid) {
             bought[x]['reserved_by_user'] = await user_.get(bought[x].reserved_by);
             delete bought[x].reserved_by;
         }
+        bought[x]['role']='buyer';
+        out.push(bought[x]);
     }
 
     for(x in sold) {
@@ -129,8 +132,10 @@ async function getpendingbyuser(uid) {
             sold[x]['reserved_by_user'] = await user_.get(sold[x].reserved_by);
             delete sold[x].reserved_by;
         }
+        sold[x]['role']='seller';
+        out.push(sold[x]);
     }
-    return { sold: sold, bought: bought };
+    return out;
 }
 
 async function getcompletebyuser(uid) {
@@ -149,6 +154,7 @@ async function getcompletebyuser(uid) {
     const ordersCollections = await orders();
     const bought = await ordersCollections.find({ reserved_by: uid , status: "Completed" }).toArray();
     const sold = await ordersCollections.find({ user_id: uid , status: "Completed" }).toArray();
+    let out = new Array(0);
     for(x in bought) {
         bought[x]['user'] = await user_.get(bought[x].user_id);
         delete bought[x].user_id;
@@ -157,6 +163,8 @@ async function getcompletebyuser(uid) {
             bought[x]['reserved_by_user'] = await user_.get(bought[x].reserved_by);
             delete bought[x].reserved_by;
         }
+        bought[x]['role']='buyer';
+        out.push(bought[x]);
     }
 
     for(x in sold) {
@@ -167,8 +175,10 @@ async function getcompletebyuser(uid) {
             sold[x]['reserved_by_user'] = await user_.get(sold[x].reserved_by);
             delete sold[x].reserved_by;
         }
+        sold[x]['role']='seller';
+        out.push(sold[x]);
     }
-    return { sold: sold, bought: bought };
+    return out;
 }
 
 /*
