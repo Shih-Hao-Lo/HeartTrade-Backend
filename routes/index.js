@@ -192,6 +192,27 @@ const constructorMethod = app => {
     });
 
 
+    app.put('/set_order_complete', async function(req, res) {
+        let orderId = req.query.orderId;
+        try {
+            let orderCompleted = await order_.SetOrderComplete(orderId);
+            res.status(200).json(orderCompleted);
+        } catch(e) {
+            res.status(500).json(e);
+        }
+    });
+
+    app.put('/set_order_open', async function(req, res) {
+        let orderId = req.query.orderId;
+        try {
+            let orderOpen = await order_.SetOrderOpen(orderId);
+            res.status(200).json(orderOpen);
+        } catch(e) {
+            res.status(500).json(e);
+        }
+    });
+
+
     /*
 
     Map Routers
