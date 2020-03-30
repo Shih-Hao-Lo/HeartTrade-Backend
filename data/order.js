@@ -109,17 +109,28 @@ async function getpendingbyuser(uid) {
     }
 
     const ordersCollections = await orders();
-    const targets = await ordersCollections.find({ reserved_by: uid , status: "Pending" }).toArray();
-    for(x in targets) {
-        targets[x]['user'] = await user_.get(targets[x].user_id);
-        delete targets[x].user_id;
+    const bought = await ordersCollections.find({ reserved_by: uid , status: "Pending" }).toArray();
+    const sold = await ordersCollections.find({ user_id: uid , status: "Pending" }).toArray();
+    for(x in bought) {
+        bought[x]['user'] = await user_.get(bought[x].user_id);
+        delete bought[x].user_id;
         // console.log(target);
-        if(targets[x].reserved_by != null) {
-            targets[x]['reserved_by_user'] = await user_.get(targets[x].reserved_by);
-            delete targets[x].reserved_by;
+        if(bought[x].reserved_by != null) {
+            bought[x]['reserved_by_user'] = await user_.get(bought[x].reserved_by);
+            delete bought[x].reserved_by;
         }
     }
-    return targets;
+
+    for(x in sold) {
+        sold[x]['user'] = await user_.get(sold[x].user_id);
+        delete sold[x].user_id;
+        // console.log(target);
+        if(sold[x].reserved_by != null) {
+            sold[x]['reserved_by_user'] = await user_.get(sold[x].reserved_by);
+            delete sold[x].reserved_by;
+        }
+    }
+    return { sold: sold, bought: bought };
 }
 
 async function getcompletebyuser(uid) {
@@ -136,15 +147,15 @@ async function getcompletebyuser(uid) {
     }
 
     const ordersCollections = await orders();
-    const baught = await ordersCollections.find({ reserved_by: uid , status: "Completed" }).toArray();
+    const bought = await ordersCollections.find({ reserved_by: uid , status: "Completed" }).toArray();
     const sold = await ordersCollections.find({ user_id: uid , status: "Completed" }).toArray();
-    for(x in baught) {
-        baught[x]['user'] = await user_.get(baught[x].user_id);
-        delete baught[x].user_id;
+    for(x in bought) {
+        bought[x]['user'] = await user_.get(bought[x].user_id);
+        delete bought[x].user_id;
         // console.log(target);
-        if(baught[x].reserved_by != null) {
-            baught[x]['reserved_by_user'] = await user_.get(baught[x].reserved_by);
-            delete baught[x].reserved_by;
+        if(bought[x].reserved_by != null) {
+            bought[x]['reserved_by_user'] = await user_.get(bought[x].reserved_by);
+            delete bought[x].reserved_by;
         }
     }
 
@@ -157,7 +168,7 @@ async function getcompletebyuser(uid) {
             delete sold[x].reserved_by;
         }
     }
-    return { sold: sold, baught: baught};
+    return { sold: sold, bought: bought };
 }
 
 /*
