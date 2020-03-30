@@ -117,6 +117,7 @@ const constructorMethod = app => {
     app.get('/get_orders_by_user', async function (req, res) {
         let userId = req.query.userId;
         try {
+            console.log(userId)
             let getOrdersByUser = await order_.getbyuser(userId);
             res.status(200).json(getOrdersByUser);
         } catch (e) {
@@ -127,8 +128,20 @@ const constructorMethod = app => {
     app.get('/get_pending_by_user' , async (req , res) => {
         try {
             let pendingbyuser = await order_.getpendingbyuser(req.query.userId);
+            console.log(pendingbyuser)
             res.status(200).json(pendingbyuser)
         } catch(e) {
+            res.status(500).json(e)
+        }
+    });
+
+    app.get('/get_complete_by_user' , async (req , res) => {
+        try {
+            let completebyuser = await order_.getcompletebyuser(req.query.userId);
+            console.log(completebyuser)
+            res.status(200).json(completebyuser)
+        } catch(e) {
+            console.log(e)
             res.status(500).json(e)
         }
     });
@@ -140,10 +153,14 @@ const constructorMethod = app => {
         let wish = req.body.wish;
         let wish_amt = req.body.wish_amt;
         let description = req.body.description;
+        console.log(req.body)
         try {
             let addOrder = await order_.addorders(userId, prod, amt, wish, wish_amt, description);
+            console.log('in add order')
+            console.log(addOrder);
             res.status(200).json(addOrder);
         } catch (e) {
+            console.log(e)
             res.status(500).json(e);
         }
     });

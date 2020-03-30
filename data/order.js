@@ -122,6 +122,44 @@ async function getpendingbyuser(uid) {
     return targets;
 }
 
+async function getcompletebyuser(uid) {
+    if(uid == undefined) {
+        throw "user id is empty! (in order.getbyuser)"
+    }
+    if(uid.constructor != ObjectID){
+        if(ObjectID.isValid(uid)){
+            uid = new ObjectID(uid);
+        }
+        else{
+            throw 'User Id is invalid!(in order.getbyuserid)'
+        }
+    }
+
+    const ordersCollections = await orders();
+    const baught = await ordersCollections.find({ reserved_by: uid , status: "Completed" }).toArray();
+    const sold = await ordersCollections.find({ user_id: uid , status: "Completed" }).toArray();
+    for(x in baught) {
+        baught[x]['user'] = await user_.get(baught[x].user_id);
+        delete baught[x].user_id;
+        // console.log(target);
+        if(baught[x].reserved_by != null) {
+            baught[x]['reserved_by_user'] = await user_.get(baught[x].reserved_by);
+            delete baught[x].reserved_by;
+        }
+    }
+
+    for(x in sold) {
+        sold[x]['user'] = await user_.get(sold[x].user_id);
+        delete sold[x].user_id;
+        // console.log(target);
+        if(sold[x].reserved_by != null) {
+            sold[x]['reserved_by_user'] = await user_.get(sold[x].reserved_by);
+            delete sold[x].reserved_by;
+        }
+    }
+    return { sold: sold, baught: baught};
+}
+
 /*
     in:
         query: {
@@ -203,7 +241,7 @@ async function getAll(query) {
         }
 */
 async function addorders(user_id , prod , amt , wish , wish_amt , description , img) {
-    if(user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined || description == undefined || img == undefined) {
+    if(user_id == undefined || prod == undefined || amt == undefined || wish == undefined || wish_amt == undefined || description == undefined) {
         throw "Input missing! (in order.addorders)"
     }
 
@@ -359,6 +397,7 @@ module.exports = {
     get,
     getbyuser,
     getpendingbyuser,
+    getcompletebyuser,
     getAll,
     addorders,
     updateorders,

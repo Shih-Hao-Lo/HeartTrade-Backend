@@ -62,7 +62,8 @@ async function getbyemail(email , Lat , Long_) {
     
     if(target == null) throw 'user email not found'
 
-    return await updateuser(target._id , target.username , target.password , Lat , Long_ , target.icon);
+    // return await updateuser(target._id , target.username , target.password , Lat , Long_ , target.icon);
+    return target
 }
 
 /*
